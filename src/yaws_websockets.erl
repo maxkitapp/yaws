@@ -301,14 +301,14 @@ handle_info(timeout, #state{close_timer=TRef}=State) when TRef /= undefined ->
 
 %% Keepalive timeout: send a ping frame and wait for any reply
 handle_info(timeout, #state{wait_pong_frame=false}=State) ->
-    error_logger:info_msg("Send ping frame", []),
+    %error_logger:info_msg("Send ping frame", []),
     GracePeriod = get_opts(keepalive_grace_period, State#state.opts),
     do_send(State#state.wsstate, {ping, <<>>}),
     {noreply, State#state{wait_pong_frame=true}, GracePeriod};
 
 %% Grace period timeout
 handle_info(timeout, #state{wait_pong_frame=true}=State) ->
-    error_logger:error_msg("endpoint gone away !", []),
+    %error_logger:error_msg("endpoint gone away !", []),
     State1 = State#state{wait_pong_frame=false},
     case get_opts(drop_on_timeout, State1#state.opts) of
         true  -> handle_abnormal_closure(State1);
